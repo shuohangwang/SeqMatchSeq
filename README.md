@@ -1,4 +1,4 @@
-# transition
+# SeqMatchSeq
 Implementations of the modes described in the following three papers:
 
 - [Learning Natural Language Inference with Lstm](https://arxiv.org/abs/1512.08849) by Shuohang Wang, Jing Jiang
