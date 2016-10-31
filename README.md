@@ -54,7 +54,7 @@ docker run -it -v /PATH/transition:/opt --rm -w /opt/main shuohang/transition:1.
 - [optim](https://github.com/torch/optim)
 - [parallel](https://github.com/clementfarabet/lua---parallel)
 - Python 2.7
-- [Python NLTK](http://www.nltk.org/install.html)
+- Python Packages: [NLTK](http://www.nltk.org/install.html), collections, json, argparse
 - [NLTK Data](http://www.nltk.org/data.html): punkt
 - Multiple CPUs
 
