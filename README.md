@@ -1,11 +1,11 @@
 # SeqMatchSeq
-Implementations of the modes described in the following three papers:
+Implementations of there modes described in the three papers related to sequence mathing:
 
 - [Learning Natural Language Inference with Lstm](https://arxiv.org/abs/1512.08849) by Shuohang Wang, Jing Jiang
 
 - [Machine Comprehension Using Match-LSTM and Answer Pointer](https://arxiv.org/abs/1608.07905) by Shuohang Wang, Jing Jiang
 
-- Sequences Maching in Word Level
+- Sequences Maching in Word Level by Shuohang Wang, Jing Jiang
 
 # Learning Natural Language Inference with Lstm
 
