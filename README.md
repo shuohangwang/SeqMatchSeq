@@ -38,7 +38,7 @@ then run the alogrithm. "dropoutP" is the main prarameter we tuned.
 ### Docker
 You may try to use Docker for running the code.
 - [Docker Install](https://github.com/codalab/codalab-worksheets/wiki/Installing-Docker)
-- [Image](https://hub.docker.com/r/shuohang/transition/): docker pull shuohang/transition:1.1
+- [Image](https://hub.docker.com/r/shuohang/seqmatchseq/): docker pull shuohang/seqmatchseq:1.0
 
 After installation, just run the following codes:
 ```
@@ -86,7 +86,7 @@ written in file "main/init.lua".
 ## Docker
 You may try to use Docker for running the code.
 - [Docker Install](https://github.com/codalab/codalab-worksheets/wiki/Installing-Docker)
-- [Image](https://hub.docker.com/r/shuohang/transition/): docker pull shuohang/transition:1.1
+- [Image](https://hub.docker.com/r/shuohang/seqmatchseq/): docker pull shuohang/seqmatchseq:1.0
 
 After installation, just run the following codes:
 ```
@@ -131,7 +131,7 @@ th main.lua -task wikiqa -model wikiqaSimAttenCnn -learning_rate 0.004 -dropoutP
 ### Docker
 You may try to use Docker for running the code.
 - [Docker Install](https://github.com/codalab/codalab-worksheets/wiki/Installing-Docker)
-- [Image](https://hub.docker.com/r/shuohang/transition/): docker pull shuohang/seqmatchseq:1.0
+- [Image](https://hub.docker.com/r/shuohang/seqmatchseq/): docker pull shuohang/seqmatchseq:1.0
 
 After installation, just run the following codes:
 For SNLI:
