@@ -17,7 +17,7 @@ function tr:init(opt)
     end
 
     if not paths.filep("../data/".. opt.task .."/sequence/train.t7") then
-        if opt.task == 'snil' then
+        if opt.task == 'snli' then
             tr:buildData('dev', opt.task)
             tr:buildData('test', opt.task)
             tr:buildData('train', opt.task)
