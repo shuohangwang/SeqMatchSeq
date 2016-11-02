@@ -109,25 +109,38 @@ docker run -it -v /PATH/transition:/opt --rm -w /opt/main shuohang/transition:1.
 - [WikiQA: A Challenge Dataset for Open-Domain Question Answering](https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering/)
 - [GloVe: Global Vectors for Word Representation](http://nlp.stanford.edu/data/glove.840B.300d.zip)
 
-For now, this code only support SNLI dataset.
+For now, this code only support SNLI and WikiQA data sets.
 
 ### Usage
+SNLI task:
 ```
-sh snli_preprocess.sh
+sh preprocess.sh snli
 cd main
 th main.lua -task snli -learning_rate 0.002 -mem_dim 150 -sim_type submul -model simAttenAlign -dropoutP 0.3 -max_epochs 15
 ```
-- model (model name for snli task): simAttenAlign
-- sim_type (different type of word matching): submul/sub/mul/weightsub/weightmul/bilinear/concate/cos
-- dropoutP (the drop out ratio on embedding layer): 0-0.5
+WikiQA task:
+```
+sh preprocess.sh wikiqa (Please first dowload the file "WikiQACorpus.zip" to the path data/wikiqa/ through address: https://www.microsoft.com/en-us/download/details.aspx?id=52419)
+cd main
+th main.lua -task wikiqa -model wikiqaSimAttenCnn -learning_rate 0.004 -dropoutP 0.04 -expIdx 10 -batch_size 10 -sim_type mul -mem_dim 150 -max_epochs 10
+```
+
+- model (model name) : simAttenCnn for "SNLI" / wikiqaSimAttenCnn for "WikiQA"
+- sim_type (different type of word matching): submul / sub / mul / weightsub / weightmul / bilinear / concate / cos
 
 ### Docker
 You may try to use Docker for running the code.
 - [Docker Install](https://github.com/codalab/codalab-worksheets/wiki/Installing-Docker)
-- [Image](https://hub.docker.com/r/shuohang/transition/): docker pull shuohang/transition:1.1
+- [Image](https://hub.docker.com/r/shuohang/transition/): docker pull shuohang/seqmatchseq:1.0
 
 After installation, just run the following codes:
+For SNLI:
 ```
 docker run -it -v /PATH/transition:/opt --rm -w /opt      shuohang/transition:1.1 /bin/bash -c "sh snli_preprocess.sh"
 docker run -it -v /PATH/transition:/opt --rm -w /opt/main shuohang/transition:1.1 /bin/bash -c "th main.lua -task snli -learning_rate 0.002 -mem_dim 150 -sim_type submul -model simAttenAlign -dropoutP 0.3 -max_epochs 15"
+```
+For WikiQA
+```
+docker run -it -v /PATH/transition:/opt --rm -w /opt      shuohang/seqmatchseq:1.0 /bin/bash -c "sh preprocess.sh wikiqa"
+docker run -it -v /PATH/transition:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th main.lua -task wikiqa -model wikiqaSimAttenCnn -learning_rate 0.004 -dropoutP 0.04 -expIdx 10 -batch_size 10 -sim_type mul -mem_dim 150 -max_epochs 10"
 ```
