@@ -192,9 +192,15 @@ function attenAlign:save(path, config, result, epoch)
     end
 
     file:write(config.task..': '..epoch..': ')
-    for _, val in pairs(result) do
-        print(val)
+    for i, val in pairs(result) do
         file:write(val .. ', ')
+        if i == 1 then
+            print('Dev: '..'accuracy:'..val)
+        elseif i == 2 then
+            print('Test: '..'accuracy:'..val)
+        else
+            print('Train: '..'accuracy:'..val)
+        end
     end
     file:write('\n')
 

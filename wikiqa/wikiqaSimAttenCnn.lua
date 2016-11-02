@@ -11,30 +11,23 @@ local wikiqaSimAttenCnn = torch.class('seqmatchseq.wikiqaSimAttenCnn')
 function wikiqaSimAttenCnn:__init(config)
     self.mem_dim       = config.mem_dim       or 100
     self.att_dim       = config.att_dim       or self.mem_dim
-    self.fih_dim       = config.fih_dim       or self.mem_dim
     self.cov_dim       = config.cov_dim       or self.mem_dim
     self.learning_rate = config.learning_rate or 0.001
     self.batch_size    = config.batch_size    or 25
-    self.num_layers    = config.num_layers    or 1
-    self.reg           = config.reg           or 1e-4
-    self.lstmModel     = config.lstmModel     or 'lstm' -- {lstm, bilstm}
-    self.sim_nhidden   = config.sim_nhidden   or 50
     self.emb_dim       = config.wvecDim       or 300
     self.task          = config.task          or 'wikiqa'
     self.numWords      = config.numWords
-    self.maxsenLen     = config.maxsenLen     or 50
     self.dropoutP      = config.dropoutP      or 0
     self.grad          = config.grad          or 'adamax'
     self.visualize     = false
     self.emb_lr        = config.emb_lr        or 0.001
     self.emb_partial   = config.emb_partial   or true
-    self.sampleN       = config.sampleN       or 50
     self.sim_type      = config.sim_type      or 'concate'
     self.window_sizes  = {1,2,3,4,5}
     self.window_large  = self.window_sizes[#self.window_sizes]
 
     self.best_score    = 0
-    
+
     self.emb_vecs = Embedding(self.numWords, self.emb_dim)
     self.emb_vecs.weight:copy( tr:loadVacab2Emb(self.task):float() )
 
@@ -60,7 +53,7 @@ function wikiqaSimAttenCnn:__init(config)
         self.cov_dim = 2
         self.sim_sg_module = self:new_sim_cos_module()
     else
-        assert(false)
+        error("The word matching method is not provided!!")
     end
 
     self.conv_module = self:new_conv_module()
@@ -342,7 +335,7 @@ function wikiqaSimAttenCnn:predict_dataset(dataset)
     end
     self.conv_module:evaluate()
     local res = {0,0}
-    dataset.size = #dataset--/10
+    dataset.size = #dataset
     for i = 1, dataset.size do
         xlua.progress(i, dataset.size)
         local prediction = self:predict(dataset[i])
@@ -351,7 +344,6 @@ function wikiqaSimAttenCnn:predict_dataset(dataset)
     end
     res[1] = res[1] / dataset.size
     res[2] = res[2] / dataset.size
-    print(res)
 
     return res
 end
@@ -370,9 +362,16 @@ function wikiqaSimAttenCnn:save(path, config, result, epoch)
     end
 
     file:write(config.task..': '..epoch..': ')
-    for _, vals in pairs(result) do
+    for i, vals in pairs(result) do
         for _, val in pairs(vals) do
             file:write(val .. ', ')
+        end
+        if i == 1 then
+            print("Dev: MAP:" .. vals[1] .. ", MRR:" .. vals[2])
+        elseif i == 2 then
+            print("Test: MAP:" .. vals[1] .. ", MRR:" .. vals[2])
+        else
+            print("Train: MAP:" .. vals[1] .. ", MRR:" .. vals[2])
         end
     end
     file:write('\n')

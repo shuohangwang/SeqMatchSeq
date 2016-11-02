@@ -11,20 +11,16 @@ local simAttenCnn = torch.class('seqmatchseq.simAttenCnn')
 function simAttenCnn:__init(config)
     self.mem_dim       = config.mem_dim       or 100
     self.att_dim       = config.att_dim       or self.mem_dim
-    self.fih_dim       = config.fih_dim       or self.mem_dim
     self.learning_rate = config.learning_rate or 0.001
     self.batch_size    = config.batch_size    or 25
     self.num_layers    = config.num_layers    or 1
     self.reg           = config.reg           or 1e-4
-    self.lstmModel     = config.lstmModel     or 'lstm' -- {lstm, bilstm}
     self.sim_nhidden   = config.sim_nhidden   or 50
     self.emb_dim       = config.wvecDim       or 300
-    self.task          = config.task          or 'paraphrase'
+    self.task          = config.task          or 'snli'
     self.numWords      = config.numWords
-    self.maxsenLen     = config.maxsenLen     or 50
     self.dropoutP      = config.dropoutP      or 0
     self.grad          = config.grad          or 'adamax'
-    self.visualize     = config.visualize     or false
     self.directions    = config.directions    or 1
     self.num_classes   = config.num_classes   or 3
     self.sim_type      = config.sim_type      or 'sub'
@@ -184,9 +180,16 @@ function simAttenCnn:save(path, config, result, epoch)
     end
 
     file:write(config.task..': '..epoch..': ')
-    for _, val in pairs(result) do
-        print(val)
+    for i, val in pairs(result) do
+
         file:write(val .. ', ')
+        if i == 1 then
+            print('Dev: '..'accuracy:'..val)
+        elseif i == 2 then
+            print('Test: '..'accuracy:'..val)
+        else
+            print('Train: '..'accuracy:'..val)
+        end
     end
     file:write('\n')
 
@@ -201,9 +204,6 @@ end
 
 function simAttenCnn:load(path)
     local state = torch.load(path)
-    if self.visualize then
-        state.config.visualize = true
-    end
     self:__init(state.config)
     self.params:copy(state.params)
 end
