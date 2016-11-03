@@ -5,9 +5,9 @@ Permission to use, copy, modify and distribute this software and its documentati
 
 This software is provided by the copyright holder and creator “as is” and any express or implied warranties, including, but not Limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.  In no event shall SMU or the creator be liable for any direct, indirect, incidental, special, exemplary or consequential damages, however caused arising in any way out of the use of this software.
 ]]
-local pointBEMlstm = torch.class('seqmatchseq.pointBEMlstm')
+local boundaryMPtr = torch.class('seqmatchseq.boundaryMPtr')
 
-function pointBEMlstm:__init(config)
+function boundaryMPtr:__init(config)
     self.mem_dim       = config.mem_dim       or 100
     self.att_dim       = config.att_dim       or self.mem_dim
     self.fih_dim       = config.fih_dim       or self.mem_dim
@@ -58,7 +58,7 @@ function pointBEMlstm:__init(config)
 end
 
 
-function pointBEMlstm:train(dataset)
+function boundaryMPtr:train(dataset)
     self.llstm:training()
     self.rlstm:training()
     self.dropoutl:training()
@@ -132,7 +132,7 @@ function pointBEMlstm:train(dataset)
     xlua.progress(dataset.size, dataset.size)
 end
 
-function pointBEMlstm:trainDt(dataset)
+function boundaryMPtr:trainDt(dataset)
     self.llstm:training()
     self.rlstm:training()
     if self.lstmModel == 'bilstm' then
@@ -182,7 +182,7 @@ function pointBEMlstm:trainDt(dataset)
     self.grad_params:div(dataset.size)
 end
 
-function pointBEMlstm:predict(lsent, rsent)
+function boundaryMPtr:predict(lsent, rsent)
 
     local linputs = self.emb_vecs:forward(lsent)
     local rinputs = self.emb_vecs:forward(rsent)
@@ -211,7 +211,7 @@ function pointBEMlstm:predict(lsent, rsent)
     return point_out
 end
 
-function pointBEMlstm:predict_dataset(dataset)
+function boundaryMPtr:predict_dataset(dataset)
     self.llstm:evaluate()
     self.rlstm:evaluate()
     self.dropoutl:evaluate()
@@ -246,7 +246,7 @@ function pointBEMlstm:predict_dataset(dataset)
     return res
 end
 
-function pointBEMlstm:predict_datasetDt(dataset)
+function boundaryMPtr:predict_datasetDt(dataset)
     self.llstm:evaluate()
     self.rlstm:evaluate()
     self.dropoutl:evaluate()
@@ -277,7 +277,7 @@ function pointBEMlstm:predict_datasetDt(dataset)
 end
 
 
-function pointBEMlstm:save(path, config, result, epoch)
+function boundaryMPtr:save(path, config, result, epoch)
     assert(string.sub(path,-1,-1)=='/')
     local paraPath = path .. config.task .. config.expIdx
     local paraBestPath = path .. config.task .. config.expIdx .. '_best'
@@ -318,7 +318,7 @@ function pointBEMlstm:save(path, config, result, epoch)
     end
 end
 
-function pointBEMlstm:load(path)
+function boundaryMPtr:load(path)
   local state = torch.load(path)
   if self.visualize then
       state.config.visualize = true

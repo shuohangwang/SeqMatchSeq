@@ -5,9 +5,9 @@ Permission to use, copy, modify and distribute this software and its documentati
 
 This software is provided by the copyright holder and creator “as is” and any express or implied warranties, including, but not Limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.  In no event shall SMU or the creator be liable for any direct, indirect, incidental, special, exemplary or consequential damages, however caused arising in any way out of the use of this software.
 ]]
-local pointMlstm = torch.class('seqmatchseq.pointMlstm')
+local sequenceMPtr = torch.class('seqmatchseq.sequenceMPtr')
 
-function pointMlstm:__init(config)
+function sequenceMPtr:__init(config)
     self.mem_dim       = config.mem_dim       or 100
     self.att_dim       = config.att_dim       or self.mem_dim
     self.fih_dim       = config.fih_dim       or self.mem_dim
@@ -58,7 +58,7 @@ function pointMlstm:__init(config)
 end
 
 
-function pointMlstm:train(dataset)
+function sequenceMPtr:train(dataset)
     self.llstm:training()
     self.rlstm:training()
     self.dropoutl:training()
@@ -131,7 +131,7 @@ function pointMlstm:train(dataset)
     xlua.progress(dataset.size, dataset.size)
 end
 
-function pointMlstm:trainDt(dataset)
+function sequenceMPtr:trainDt(dataset)
     self.llstm:training()
     self.rlstm:training()
     self.dropoutl:training()
@@ -183,7 +183,7 @@ function pointMlstm:trainDt(dataset)
     self.grad_params:div(dataset.size)
 end
 
-function pointMlstm:predict(lsent, rsent)
+function sequenceMPtr:predict(lsent, rsent)
 
     local linputs_emb = self.emb_vecs:forward(lsent)
     local rinputs_emb = self.emb_vecs:forward(rsent)
@@ -214,7 +214,7 @@ function pointMlstm:predict(lsent, rsent)
 end
 
 
-function pointMlstm:predict_dataset(dataset)
+function sequenceMPtr:predict_dataset(dataset)
     self.llstm:evaluate()
     self.rlstm:evaluate()
     self.dropoutl:evaluate()
@@ -241,7 +241,7 @@ function pointMlstm:predict_dataset(dataset)
     return res
 end
 
-function pointMlstm:predict_datasetDt(dataset)
+function sequenceMPtr:predict_datasetDt(dataset)
     self.llstm:evaluate()
     self.rlstm:evaluate()
     self.dropoutl:evaluate()
@@ -263,7 +263,7 @@ function pointMlstm:predict_datasetDt(dataset)
 
 end
 
-function pointMlstm:save(path, config, result, epoch)
+function sequenceMPtr:save(path, config, result, epoch)
     assert(string.sub(path,-1,-1)=='/')
     local paraPath = path .. config.task .. config.expIdx
     local paraBestPath = path .. config.task .. config.expIdx .. '_best'
@@ -304,7 +304,7 @@ function pointMlstm:save(path, config, result, epoch)
     end
 end
 
-function pointMlstm:load(path)
+function sequenceMPtr:load(path)
     local state = torch.load(path)
     if self.visualize then
         state.config.visualize = true
