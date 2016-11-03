@@ -6,9 +6,9 @@ Permission to use, copy, modify and distribute this software and its documentati
 This software is provided by the copyright holder and creator “as is” and any express or implied warranties, including, but not Limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.  In no event shall SMU or the creator be liable for any direct, indirect, incidental, special, exemplary or consequential damages, however caused arising in any way out of the use of this software.
 ]]
 
-local wikiqaSimAttenCnn = torch.class('seqmatchseq.wikiqaSimAttenCnn')
+local compAggWikiqa = torch.class('seqmatchseq.compAggWikiqa')
 
-function wikiqaSimAttenCnn:__init(config)
+function compAggWikiqa:__init(config)
     self.mem_dim       = config.mem_dim       or 100
     self.att_dim       = config.att_dim       or self.mem_dim
     self.cov_dim       = config.cov_dim       or self.mem_dim
@@ -22,7 +22,7 @@ function wikiqaSimAttenCnn:__init(config)
     self.visualize     = false
     self.emb_lr        = config.emb_lr        or 0.001
     self.emb_partial   = config.emb_partial   or true
-    self.sim_type      = config.sim_type      or 'concate'
+    self.comp_type      = config.comp_type      or 'concate'
     self.window_sizes  = {1,2,3,4,5}
     self.window_large  = self.window_sizes[#self.window_sizes]
 
@@ -35,21 +35,21 @@ function wikiqaSimAttenCnn:__init(config)
     self.proj_module_master = self:new_proj_module()
     self.att_module_master = self:new_att_module()
 
-    if self.sim_type == 'concate' then
+    if self.comp_type == 'concate' then
         self.sim_sg_module = self:new_sim_con_module()
-    elseif self.sim_type == 'sub' then
+    elseif self.comp_type == 'sub' then
         self.sim_sg_module = self:new_sim_sub_module()
-    elseif self.sim_type == 'mul' then
+    elseif self.comp_type == 'mul' then
         self.sim_sg_module = self:new_sim_mul_module()
-    elseif self.sim_type == 'weightsub' then
+    elseif self.comp_type == 'weightsub' then
         self.sim_sg_module = self:new_sim_weightsub_module()
-    elseif self.sim_type == 'weightmul' then
+    elseif self.comp_type == 'weightmul' then
         self.sim_sg_module = self:new_sim_weightmul_module()
-    elseif self.sim_type == 'bilinear' then
+    elseif self.comp_type == 'bilinear' then
         self.sim_sg_module = self:new_sim_bilinear_module()
-    elseif self.sim_type == 'submul' then
+    elseif self.comp_type == 'submul' then
         self.sim_sg_module = self:new_sim_submul_module()
-    elseif self.sim_type == 'cos' then
+    elseif self.comp_type == 'cos' then
         self.cov_dim = 2
         self.sim_sg_module = self:new_sim_cos_module()
     else
@@ -87,7 +87,7 @@ function wikiqaSimAttenCnn:__init(config)
 
 end
 
-function wikiqaSimAttenCnn:new_proj_module()
+function compAggWikiqa:new_proj_module()
     local input = nn.Identity()()
     local i = nn.Sigmoid()(nn.Linear(self.emb_dim, self.mem_dim)(input))
     local u = nn.Tanh()(nn.Linear(self.emb_dim, self.mem_dim)(input))
@@ -99,7 +99,7 @@ function wikiqaSimAttenCnn:new_proj_module()
     return module
 end
 
-function wikiqaSimAttenCnn:new_att_module()
+function compAggWikiqa:new_att_module()
     local linput, rinput = nn.Identity()(), nn.Identity()()
     --padding
     local lPad = nn.Padding(1,1)(linput)
@@ -119,7 +119,7 @@ function wikiqaSimAttenCnn:new_att_module()
 
     return att_module
 end
-function wikiqaSimAttenCnn:new_conv_module()
+function compAggWikiqa:new_conv_module()
     local input, sizes = nn.Identity()(), nn.Identity()()
 
     local conv = {}
@@ -136,7 +136,7 @@ function wikiqaSimAttenCnn:new_conv_module()
 end
 
 
-function wikiqaSimAttenCnn:new_sim_con_module()
+function compAggWikiqa:new_sim_con_module()
     local inputq, inputa = nn.Identity()(), nn.Identity()()
     local output = nn.ReLU()(nn.Linear(2*self.mem_dim, self.mem_dim)(nn.JoinTable(2){inputq, inputa}))
     local module = nn.gModule({inputq, inputa}, {output})
@@ -144,7 +144,7 @@ function wikiqaSimAttenCnn:new_sim_con_module()
 end
 
 
-function wikiqaSimAttenCnn:new_sim_submul_module()
+function compAggWikiqa:new_sim_submul_module()
     local inputq, inputa = nn.Identity()(), nn.Identity()()
     local qa_sub = nn.Power(2)(nn.CSubTable(){inputq, inputa})
     local qa_mul = nn.CMulTable(){inputq, inputa}
@@ -155,21 +155,21 @@ function wikiqaSimAttenCnn:new_sim_submul_module()
     return module
 end
 
-function wikiqaSimAttenCnn:new_sim_bilinear_module()
+function compAggWikiqa:new_sim_bilinear_module()
     local inputq, inputa = nn.Identity()(), nn.Identity()()
     local output = nn.ReLU()(nn.Bilinear(self.mem_dim, self.mem_dim, self.mem_dim)({inputq, inputa}))
     local module = nn.gModule({inputq, inputa}, {output})
     return module
 end
 
-function wikiqaSimAttenCnn:new_sim_sub_module()
+function compAggWikiqa:new_sim_sub_module()
     local inputq, inputa = nn.Identity()(), nn.Identity()()
     local output = nn.Power(2)(nn.CSubTable(){inputq, inputa})
     local module = nn.gModule({inputq, inputa}, {output})
     return module
 end
 
-function wikiqaSimAttenCnn:new_sim_mul_module()
+function compAggWikiqa:new_sim_mul_module()
     local inputq, inputa = nn.Identity()(), nn.Identity()()
 
     local output = nn.CMulTable(){inputq, inputa}
@@ -177,14 +177,14 @@ function wikiqaSimAttenCnn:new_sim_mul_module()
     local module = nn.gModule({inputq, inputa}, {output})
     return module
 end
-function wikiqaSimAttenCnn:new_sim_weightsub_module()
+function compAggWikiqa:new_sim_weightsub_module()
     local inputq, inputa = nn.Identity()(), nn.Identity()()
     local output = nn.Power(2)(nn.CSubTable(){nn.Add(self.mem_dim)(nn.CMul(self.mem_dim)(inputq)), nn.Add(self.mem_dim)(nn.CMul(self.mem_dim)(inputa))})
     local module = nn.gModule({inputq, inputa}, {output})
     return module
 end
 
-function wikiqaSimAttenCnn:new_sim_weightmul_module()
+function compAggWikiqa:new_sim_weightmul_module()
     local inputq, inputa = nn.Identity()(), nn.Identity()()
 
     local output = nn.CMulTable(){nn.Add(self.mem_dim)(nn.CMul(self.mem_dim)(inputq)), nn.Add(self.mem_dim)(nn.CMul(self.mem_dim)(inputa))}
@@ -193,7 +193,7 @@ function wikiqaSimAttenCnn:new_sim_weightmul_module()
     return module
 end
 
-function wikiqaSimAttenCnn:new_sim_cos_module()
+function compAggWikiqa:new_sim_cos_module()
     local inputq, inputa = nn.Identity()(), nn.Identity()()
     local cos = nn.View(-1,1)(nn.CosineDistance(){inputq, inputa})
     local dis = nn.View(-1,1)(nn.PairwiseDistance(2){inputq, inputa})
@@ -204,7 +204,7 @@ function wikiqaSimAttenCnn:new_sim_cos_module()
 end
 
 
-function wikiqaSimAttenCnn:train(dataset)
+function compAggWikiqa:train(dataset)
     for i = 1, 2 do
         self.proj_modules[i]:training()
         self.dropout_modules[i]:training()
@@ -290,7 +290,7 @@ function wikiqaSimAttenCnn:train(dataset)
 end
 
 
-function wikiqaSimAttenCnn:predict(data_raw)
+function compAggWikiqa:predict(data_raw)
     local data_q = data_raw[1]
     local data_as = data_raw[2]
     local label = data_raw[3]
@@ -328,7 +328,7 @@ function wikiqaSimAttenCnn:predict(data_raw)
     return {map,mrr}
 end
 
-function wikiqaSimAttenCnn:predict_dataset(dataset)
+function compAggWikiqa:predict_dataset(dataset)
     for i = 1, 2 do
         self.proj_modules[i]:evaluate()
         self.dropout_modules[i]:evaluate()
@@ -348,7 +348,7 @@ function wikiqaSimAttenCnn:predict_dataset(dataset)
     return res
 end
 
-function wikiqaSimAttenCnn:save(path, config, result, epoch)
+function compAggWikiqa:save(path, config, result, epoch)
     assert(string.sub(path,-1,-1)=='/')
     local paraPath = path .. config.task .. config.expIdx
     local paraBestPath = path .. config.task .. config.expIdx .. '_best'
@@ -386,7 +386,7 @@ function wikiqaSimAttenCnn:save(path, config, result, epoch)
     torch.save(paraPath, {params = self.params, config = config})
 end
 
-function wikiqaSimAttenCnn:load(path)
+function compAggWikiqa:load(path)
     local state = torch.load(path)
     self:__init(state.config)
     self.params:copy(state.params)

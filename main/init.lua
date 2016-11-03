@@ -24,10 +24,8 @@ include '../models/pointNet.lua'
 
 include '../nn/CAddRepTable.lua'
 
-include '../snli/attenAlign.lua'
-include '../squad/pointMlstm.lua'
-include '../squad/pointBEMlstm.lua'
-include '../squad/bpointBEMlstm.lua'
+include '../squad/sequenceMPtr.lua'
+include '../squad/boundaryMPtr.lua'
 opt = {}
 
 opt.batch_size = 6
@@ -41,7 +39,7 @@ opt.num_layers = 1
 opt.m_layers = 2
 opt.dropoutP = 0.4
 
-opt.model = 'pointBEMlstm'
+opt.model = 'boundaryMPtr'
 opt.task = 'squad'
 opt.preEmb = 'glove'
 opt.grad = 'adamax'

@@ -22,13 +22,13 @@ include '../models/pointNet.lua'
 include '../nn/CAddRepTable.lua'
 include '../nn/DMax.lua'
 
-include '../snli/attenAlign.lua'
-include '../snli/simAttenCnn.lua'
+include '../snli/mLSTM.lua'
+include '../snli/compAggSNLI.lua'
 
-include '../squad/pointMlstm.lua'
-include '../squad/pointBEMlstm.lua'
+include '../squad/boundaryMPtr.lua'
+include '../squad/sequenceMPtr.lua'
 
-include '../wikiqa/wikiqaSimAttenCnn.lua'
+include '../wikiqa/compAggWikiqa.lua'
 
 print ("require done !")
 
@@ -50,10 +50,10 @@ cmd:option('-wvecDim',300,'embedding dimension')
 cmd:option('-mem_dim', 300, 'state dimension')
 cmd:option('-att_dim', 300, 'attenion dimension')
 
-cmd:option('-model','attenAlign','model')
+cmd:option('-model','mLSTM','model')
 cmd:option('-task','snli','task')
 
-cmd:option('-sim_type', 'submul', 'w-by-w type')
+cmd:option('-comp_type', 'submul', 'w-by-w type')
 
 cmd:option('-preEmb','glove','Embedding pretrained method')
 cmd:option('-grad','adamax','gradient descent method')
