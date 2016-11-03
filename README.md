@@ -94,7 +94,7 @@ docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/seqmatchseq:
 docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th mainDt.lua"
 ```
 
-# Sequences Maching in Word Level
+# A Compare-Aggregate Model for Matching Text Sequences
 ### Requirements
 - [Torch7](https://github.com/torch/torch7)
 - [nn](https://github.com/torch/nn)
