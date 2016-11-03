@@ -13,8 +13,8 @@ function CNNwwSimatten:__init(config)
     self.mem_dim   = config.mem_dim
     self.att_dim   = config.att_dim  or self.mem_dim
     self.fih_dim   = config.fih_dim  or self.mem_dim
-    self.sim_type  = config.sim_type
-    self.cov_dim   = self.sim_type == 'cos' and 2 or self.mem_dim
+    self.comp_type  = config.comp_type
+    self.cov_dim   = self.comp_type == 'cos' and 2 or self.mem_dim
     self.master_ww = self:new_ww()
 end
 
@@ -30,28 +30,28 @@ function CNNwwSimatten:new_ww()
     local Yl =  nn.MM(){alpha, lPad}
 
     local sim_out
-    if self.sim_type == 'submul' then
+    if self.comp_type == 'submul' then
         local sub = nn.Power(2)(nn.CSubTable(){Yl, rinput})
         local mul = nn.CMulTable(){Yl, rinput}
         sim_out = nn.ReLU()(nn.Linear(2*self.mem_dim, self.mem_dim)( nn.JoinTable(2){sub, mul}))
-    elseif self.sim_type == 'sub' then
+    elseif self.comp_type == 'sub' then
         sim_out = nn.Power(2)(nn.CSubTable(){Yl, rinput})
-    elseif self.sim_type == 'mul' then
+    elseif self.comp_type == 'mul' then
         sim_out = nn.CMulTable(){Yl, rinput}
-    elseif self.sim_type == 'weightsub' then
+    elseif self.comp_type == 'weightsub' then
         sim_out = nn.Power(2)(nn.CSubTable(){nn.Add(self.mem_dim)(nn.CMul(self.mem_dim)(Yl)), nn.Add(self.mem_dim)(nn.CMul(self.mem_dim)(rinput))})
-    elseif self.sim_type == 'weightmul' then
+    elseif self.comp_type == 'weightmul' then
         sim_out = nn.CMulTable(){nn.Add(self.mem_dim)(nn.CMul(self.mem_dim)(Yl)), nn.Add(self.mem_dim)(nn.CMul(self.mem_dim)(rinput))}
-    elseif self.sim_type == 'bilinear' then
+    elseif self.comp_type == 'bilinear' then
         sim_out = nn.ReLU()(nn.Bilinear(self.mem_dim,self.mem_dim, self.mem_dim)({Yl, rinput}))
-    elseif self.sim_type == 'concate' then
+    elseif self.comp_type == 'concate' then
         sim_out = nn.ReLU()(nn.Linear(2*self.mem_dim, self.mem_dim)( nn.JoinTable(2){Yl, rinput}))
-    elseif self.sim_type == 'cos' then
+    elseif self.comp_type == 'cos' then
         local cos = nn.View(-1,1)(nn.CosineDistance(){Yl, rinput})
         local dis = nn.View(-1,1)(nn.PairwiseDistance(2){Yl, rinput})
     	sim_out= nn.JoinTable(2){cos, dis}
     else
-        print(self.sim_type)
+        print(self.comp_type)
         assert(false)
     end
 
