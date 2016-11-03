@@ -40,7 +40,7 @@ You may try to use Docker for running the code.
 - [Docker Install](https://github.com/codalab/codalab-worksheets/wiki/Installing-Docker)
 - [Image](https://hub.docker.com/r/shuohang/seqmatchseq/): docker pull shuohang/seqmatchseq:1.0
 
-After installation, just run the following codes:
+After installation, just run the following codes (PATH need to change):
 ```
 docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/seqmatchseq:1.0 /bin/bash -c "sh preprocess.sh snli"
 docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th main.lua"
@@ -88,7 +88,7 @@ You may try to use Docker for running the code.
 - [Docker Install](https://github.com/codalab/codalab-worksheets/wiki/Installing-Docker)
 - [Image](https://hub.docker.com/r/shuohang/seqmatchseq/): docker pull shuohang/seqmatchseq:1.0
 
-After installation, just run the following codes:
+After installation, just run the following codes (PATH need to change):
 ```
 docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/seqmatchseq:1.0 /bin/bash -c "sh preprocess.sh squad"
 docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th mainDt.lua"
@@ -133,7 +133,7 @@ You may try to use Docker for running the code.
 - [Docker Install](https://github.com/codalab/codalab-worksheets/wiki/Installing-Docker)
 - [Image](https://hub.docker.com/r/shuohang/seqmatchseq/): docker pull shuohang/seqmatchseq:1.0
 
-After installation, just run the following codes:
+After installation, just run the following codes (PATH need to change):
 
 For SNLI:
 ```
