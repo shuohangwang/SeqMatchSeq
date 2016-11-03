@@ -1,5 +1,5 @@
 # SeqMatchSeq
-Implementations of there modes described in the three papers related to sequence mathing:
+Implementations of three modes described in the three papers related to sequence mathing:
 
 - [Learning Natural Language Inference with Lstm](https://arxiv.org/abs/1512.08849) by Shuohang Wang, Jing Jiang
 
