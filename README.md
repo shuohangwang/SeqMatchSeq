@@ -5,7 +5,7 @@ Implementations of there modes described in the three papers related to sequence
 
 - [Machine Comprehension Using Match-LSTM and Answer Pointer](https://arxiv.org/abs/1608.07905) by Shuohang Wang, Jing Jiang
 
-- Sequences Maching in Word Level by Shuohang Wang, Jing Jiang
+- A Compare-Aggregate Model for Matching Text Sequences by Shuohang Wang, Jing Jiang
 
 # Learning Natural Language Inference with Lstm
 
@@ -30,7 +30,7 @@ th main.lua -task snli -model mLSTM -dropoutP 0.3 -num_classes 3
 "squad_preprocess.sh" will download the datasets and preprocess the SNLI corpus into the files 
 (train.txt dev.txt test.txt) under the path "data/snli/sequence" with the format:
 
->sequence1(premise) \t sequence2(hypothesis) \t label(1 or 2 or 3) \n
+>sequence1(premise) \t sequence2(hypothesis) \t label(from 1 to num_classes) \n
 
 "main.lua" will first initialize the prepossed data and word embeddings into a Torch format and 
 then run the alogrithm. "dropoutP" is the main prarameter we tuned.
@@ -64,7 +64,7 @@ docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:
 
 ### Usage
 ```
-sh squad_preprocess.sh
+sh preprocess.sh squad
 cd main
 th mainDt.lua 
 ```
@@ -80,8 +80,8 @@ then run the alogrithm. As this code is run through multiple CPU cores, the init
 written in file "main/init.lua". 
 
 - "opt.num_processes": 5. The number of threads used.
-- "opt.batch_size"   : 6. Batch size for each thread. (Then total is 30 by default.)
-- "opt.model"        : pointBEMlstm (boundary model); pointMlstm (sequence model)
+- "opt.batch_size"   : 6. Batch size for each thread. (Then the mini_batch would be 5*6 .)
+- "opt.model"        : boundaryMPtr (boundary model); sequenceMPtr (sequence model)
 
 ## Docker
 You may try to use Docker for running the code.
@@ -90,8 +90,8 @@ You may try to use Docker for running the code.
 
 After installation, just run the following codes:
 ```
-docker run -it -v /PATH/transition:/opt --rm -w /opt      shuohang/transition:1.1 /bin/bash -c "sh squad_preprocess.sh"
-docker run -it -v /PATH/transition:/opt --rm -w /opt/main shuohang/transition:1.1 /bin/bash -c "th mainDt.lua"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/seqmatchseq:1.0 /bin/bash -c "sh preprocess.sh squad"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th mainDt.lua"
 ```
 
 # Sequences Maching in Word Level
@@ -116,17 +116,17 @@ SNLI task:
 ```
 sh preprocess.sh snli
 cd main
-th main.lua -task snli -learning_rate 0.002 -mem_dim 150 -sim_type submul -model simAttenAlign -dropoutP 0.3 -max_epochs 15
+th main.lua -task snli -model compAggSNLI -comp_type submul -learning_rate 0.002 -mem_dim 150 -dropoutP 0.3 
 ```
 WikiQA task:
 ```
 sh preprocess.sh wikiqa (Please first dowload the file "WikiQACorpus.zip" to the path data/wikiqa/ through address: https://www.microsoft.com/en-us/download/details.aspx?id=52419)
 cd main
-th main.lua -task wikiqa -model wikiqaSimAttenCnn -learning_rate 0.004 -dropoutP 0.04 -expIdx 10 -batch_size 10 -sim_type mul -mem_dim 150 -max_epochs 10
+th main.lua -task wikiqa -model compAggWikiqa -comp_type mul -learning_rate 0.004 -dropoutP 0.04 -batch_size 10 -mem_dim 150 
 ```
 
-- model (model name) : simAttenCnn for "SNLI" / wikiqaSimAttenCnn for "WikiQA"
-- sim_type (different type of word matching): submul / sub / mul / weightsub / weightmul / bilinear / concate / cos
+- model (model name) : compAggSNLI for "SNLI" / compAggWikiqa for "WikiQA"
+- comp_type (8 different types of word comparison): submul / sub / mul / weightsub / weightmul / bilinear / concate / cos
 
 ### Docker
 You may try to use Docker for running the code.
@@ -136,11 +136,13 @@ You may try to use Docker for running the code.
 After installation, just run the following codes:
 For SNLI:
 ```
-docker run -it -v /PATH/transition:/opt --rm -w /opt      shuohang/transition:1.1 /bin/bash -c "sh snli_preprocess.sh"
-docker run -it -v /PATH/transition:/opt --rm -w /opt/main shuohang/transition:1.1 /bin/bash -c "th main.lua -task snli -learning_rate 0.002 -mem_dim 150 -sim_type submul -model simAttenAlign -dropoutP 0.3 -max_epochs 15"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/transition:1.1 /bin/bash -c "sh preprocess.sh snli"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/transition:1.1 /bin/bash -c "th main.lua -task snli -model compAggSNLI -comp_type submul -learning_rate 0.002 -mem_dim 150 -dropoutP 0.3"
 ```
 For WikiQA
 ```
-docker run -it -v /PATH/transition:/opt --rm -w /opt      shuohang/seqmatchseq:1.0 /bin/bash -c "sh preprocess.sh wikiqa"
-docker run -it -v /PATH/transition:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th main.lua -task wikiqa -model wikiqaSimAttenCnn -learning_rate 0.004 -dropoutP 0.04 -expIdx 10 -batch_size 10 -sim_type mul -mem_dim 150 -max_epochs 10"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/seqmatchseq:1.0 /bin/bash -c "sh preprocess.sh wikiqa"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th main.lua -task wikiqa -model compAggWikiqa -comp_type mul -learning_rate 0.004 -dropoutP 0.04 -batch_size 10 -mem_dim 150"
 ```
+# Copyright
+Copyright 2015 Singapore Management University (SMU). All Rights Reserved.
