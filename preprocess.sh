@@ -11,6 +11,8 @@ GloVe="data/glove/glove.840B.300d.txt"
 WikiQA="data/wikiqa/WikiQACorpus.zip"
 SQuAD="data/squad/train-v1.1.json"
 SNLI="data/snli/snli_1.0.zip"
+
+
 if [ ! -f "$GloVe" ]; then
 	wget http://nlp.stanford.edu/data/glove.840B.300d.zip -P data/glove
 	unzip -o -d data/glove/ data/glove/glove.840B.300d.zip
@@ -18,6 +20,15 @@ fi;
 
 
 if [ "$task" = "wikiqa" ]; then
+	if [ ! -d "data" ]; then 
+		mkdir data 
+		if [ ! -d "data/wikiqa" ]; then 
+			mkdir data/wikiqa/
+			if [ ! -d "data/wikiqa/sequence" ]; then 
+				mkdir data/wikiqa/sequence
+			fi;
+		fi;
+	fi;
 	if [ -f "$WikiQA" ]; then
 		unzip -o -d data/wikiqa/ data/wikiqa/WikiQACorpus.zip
 	else
@@ -28,12 +39,18 @@ elif [ "$task" = "squad" ]; then
 		wget https://rajpurkar.github.io/SQuAD-explorer/dataset/train-v1.1.json -P data/squad
 		wget https://rajpurkar.github.io/SQuAD-explorer/dataset/dev-v1.1.json -P data/squad
 	fi;
+	if [ ! -d "data/squad/sequence" ]; then 
+		mkdir data/squad/sequence
+	fi;
 	curl https://worksheets.codalab.org/rest/bundles/0xbcd57bee090b421c982906709c8c27e1/contents/blob/ > trainedmodel/evaluation/squad/evaluate-v1.1.py
 	python preprocess.py squad
 elif [ "$task" = "snli" ]; then
     if [ ! -f "$SNLI" ]; then
 		wget http://nlp.stanford.edu/projects/snli/snli_1.0.zip -P data/snli
 		unzip -o -d data/snli/ data/snli/snli_1.0.zip
+	fi;
+	if [ ! -d "data/snli/sequence" ]; then 
+		mkdir data/snli/sequence
 	fi;
 	python preprocess.py snli
 fi;
