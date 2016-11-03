@@ -112,7 +112,7 @@ docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:
 For now, this code only support SNLI and WikiQA data sets.
 
 ### Usage
-SNLI task:
+SNLI task (The preprocessed format follows the previous description):
 ```
 sh preprocess.sh snli
 cd main
