@@ -81,7 +81,7 @@ written in file "main/init.lua".
 
 - `opt.num_processes`: 5. The number of threads used.
 - `opt.batch_size`   : 6. Batch size for each thread. (Then the mini_batch would be 5*6 .)
-- `opt.model`        : boundaryMPtr (boundary model); sequenceMPtr (sequence model)
+- `opt.model`        : boundaryMPtr / sequenceMPtr 
 
 ## Docker
 You may try to use Docker for running the code.
@@ -125,8 +125,8 @@ cd main
 th main.lua -task wikiqa -model compAggWikiqa -comp_type mul -learning_rate 0.004 -dropoutP 0.04 -batch_size 10 -mem_dim 150 
 ```
 
-- model (model name) : compAggSNLI for "SNLI" / compAggWikiqa for "WikiQA"
-- comp_type (8 different types of word comparison): submul / sub / mul / weightsub / weightmul / bilinear / concate / cos
+- `model` (model name) : compAggSNLI  / compAggWikiqa 
+- `comp_type` (8 different types of word comparison): submul / sub / mul / weightsub / weightmul / bilinear / concate / cos
 
 ### Docker
 You may try to use Docker for running the code.
@@ -134,6 +134,7 @@ You may try to use Docker for running the code.
 - [Image](https://hub.docker.com/r/shuohang/seqmatchseq/): docker pull shuohang/seqmatchseq:1.0
 
 After installation, just run the following codes:
+
 For SNLI:
 ```
 docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/transition:1.1 /bin/bash -c "sh preprocess.sh snli"
