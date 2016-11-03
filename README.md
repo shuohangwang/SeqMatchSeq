@@ -22,15 +22,15 @@ Implementations of there modes described in the three papers related to sequence
 
 ### Usage
 ```
-sh snli_preprocess.sh
+sh preprocess.sh snli
 cd main
-th main.lua -dropoutP <0-0.5> -num_classes 3
+th main.lua -task snli -model mLSTM -dropoutP 0.3 -num_classes 3
 ```
 
 "squad_preprocess.sh" will download the datasets and preprocess the SNLI corpus into the files 
 (train.txt dev.txt test.txt) under the path "data/snli/sequence" with the format:
 
->sequence1(premise) \t sequence2(hypothesis) \t label \n
+>sequence1(premise) \t sequence2(hypothesis) \t label(1 or 2 or 3) \n
 
 "main.lua" will first initialize the prepossed data and word embeddings into a Torch format and 
 then run the alogrithm. "dropoutP" is the main prarameter we tuned.
@@ -42,8 +42,8 @@ You may try to use Docker for running the code.
 
 After installation, just run the following codes:
 ```
-docker run -it -v /PATH/transition:/opt --rm -w /opt      shuohang/transition:1.1 /bin/bash -c "sh snli_preprocess.sh"
-docker run -it -v /PATH/transition:/opt --rm -w /opt/main shuohang/transition:1.1 /bin/bash -c "th main.lua"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/seqmatchseq:1.0 /bin/bash -c "sh preprocess.sh snli"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th main.lua"
 ```
 # Machine Comprehension Using Match-LSTM and Answer Pointer
 
