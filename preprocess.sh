@@ -22,13 +22,14 @@ fi;
 if [ "$task" = "wikiqa" ]; then
 	if [ ! -d "data" ]; then 
 		mkdir data 
-		if [ ! -d "data/wikiqa" ]; then 
-			mkdir data/wikiqa/
-			if [ ! -d "data/wikiqa/sequence" ]; then 
-				mkdir data/wikiqa/sequence
-			fi;
-		fi;
 	fi;
+	if [ ! -d "data/wikiqa" ]; then
+		mkdir data/wikiqa/ 
+        fi;
+	if [ ! -d "data/wikiqa/sequence" ]; then
+		mkdir data/wikiqa/sequence
+	fi;
+
 	if [ -f "$WikiQA" ]; then
 		unzip -o -d data/wikiqa/ data/wikiqa/WikiQACorpus.zip
 	else
