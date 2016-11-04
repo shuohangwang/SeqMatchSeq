@@ -27,7 +27,7 @@ cd main
 th main.lua -task snli -model mLSTM -dropoutP 0.3 -num_classes 3
 ```
 
-`squad_preprocess.sh` will download the datasets and preprocess the SNLI corpus into the files 
+`sh preprocess.sh snli` will download the datasets and preprocess the SNLI corpus into the files 
 (train.txt dev.txt test.txt) under the path "data/snli/sequence" with the format:
 
 >sequence1(premise) \t sequence2(hypothesis) \t label(from 1 to num_classes) \n
@@ -69,7 +69,7 @@ cd main
 th mainDt.lua 
 ```
 
-`squad_preprocess.sh` will download the datasets and preprocess the SQuAD corpus into the files 
+`sh preprocess.sh squad` will download the datasets and preprocess the SQuAD corpus into the files 
 (train.txt dev.txt) under the path "data/squad/sequence" with the format:
 
 >sequence1(Doument) \t sequence2(Question) \t sequence of the positions where the answer appear 
@@ -77,7 +77,7 @@ in Document (e.g. 3 4 5 6)  \n
 
 `mainDt.lua` will first initialize the prepossed data and word embeddings into a Torch format and 
 then run the alogrithm. As this code is run through multiple CPU cores, the initial parameters are
-written in file "main/init.lua". 
+written in the file "main/init.lua". 
 
 - `opt.num_processes`: 5. The number of threads used.
 - `opt.batch_size`   : 6. Batch size for each thread. (Then the mini_batch would be 5*6 .)
