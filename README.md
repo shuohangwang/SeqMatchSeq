@@ -32,7 +32,7 @@ th main.lua -task snli -model mLSTM -dropoutP 0.3 -num_classes 3
 
 >sequence1(premise) \t sequence2(hypothesis) \t label(from 1 to num_classes) \n
 
-`main.lua` will first initialize the prepossed data and word embeddings into a Torch format and 
+`main.lua` will first initialize the preprossed data and word embeddings into a Torch format and 
 then run the alogrithm. "dropoutP" is the main prarameter we tuned.
 
 ### Docker
@@ -75,7 +75,7 @@ th mainDt.lua
 >sequence1(Doument) \t sequence2(Question) \t sequence of the positions where the answer appear 
 in Document (e.g. 3 4 5 6)  \n
 
-`mainDt.lua` will first initialize the prepossed data and word embeddings into a Torch format and 
+`mainDt.lua` will first initialize the preprossed data and word embeddings into a Torch format and 
 then run the alogrithm. As this code is run through multiple CPU cores, the initial parameters are
 written in the file "main/init.lua". 
 
