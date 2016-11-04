@@ -120,7 +120,7 @@ th main.lua -task snli -model compAggSNLI -comp_type submul -learning_rate 0.002
 ```
 WikiQA task:
 ```
-sh preprocess.sh wikiqa (Please first dowload the file "WikiQACorpus.zip" to the path data/wikiqa/ through address: https://www.microsoft.com/en-us/download/details.aspx?id=52419)
+sh preprocess.sh wikiqa (Please first dowload the file "WikiQACorpus.zip" to the path SeqMatchSeq/data/wikiqa/ through address: https://www.microsoft.com/en-us/download/details.aspx?id=52419)
 cd main
 th main.lua -task wikiqa -model compAggWikiqa -comp_type mul -learning_rate 0.004 -dropoutP 0.04 -batch_size 10 -mem_dim 150 
 ```
