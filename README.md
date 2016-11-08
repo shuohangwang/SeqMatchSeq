@@ -5,7 +5,7 @@ Implementations of three models described in the three papers related to sequenc
 
 - [Machine Comprehension Using Match-LSTM and Answer Pointer](https://arxiv.org/abs/1608.07905) by Shuohang Wang, Jing Jiang
 
-- [A Compare-Aggregate Model for Matching Text Sequences](http://104.155.136.4:3000/pdf?id=HJTzHtqee) by Shuohang Wang, Jing Jiang
+- [A Compare-Aggregate Model for Matching Text Sequences](https://arxiv.org/abs/1611.01747) by Shuohang Wang, Jing Jiang
 
 # Learning Natural Language Inference with Lstm
 
