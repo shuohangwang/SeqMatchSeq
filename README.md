@@ -137,8 +137,8 @@ After installation, just run the following codes (/PATH/SeqMatchSeq need to chan
 
 For SNLI:
 ```
-docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/transition:1.1 /bin/bash -c "sh preprocess.sh snli"
-docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/transition:1.1 /bin/bash -c "th main.lua -task snli -model compAggSNLI -comp_type submul -learning_rate 0.002 -mem_dim 150 -dropoutP 0.3"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt      shuohang/seqmatchseq:1.0 /bin/bash -c "sh preprocess.sh snli"
+docker run -it -v /PATH/SeqMatchSeq:/opt --rm -w /opt/main shuohang/seqmatchseq:1.0 /bin/bash -c "th main.lua -task snli -model compAggSNLI -comp_type submul -learning_rate 0.002 -mem_dim 150 -dropoutP 0.3"
 ```
 For WikiQA
 ```
