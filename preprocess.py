@@ -41,8 +41,8 @@ def prepSQuAD():
 	filenames = ['dev', 'train']
 	for filename in filenames:
 		fpr = open("data/squad/"+filename+"-v1.1.json", 'r')
-		line = fpr.readline()
-		js = json.loads(line)
+		body = fpr.read()
+		js = json.loads(body)
 		fpw = open("data/squad/sequence/"+filename+".txt", 'w')
 		for c in js["data"]:
 			for p in c["paragraphs"]:
