@@ -13,8 +13,8 @@ import string
 from nltk.tokenize import word_tokenize
 
 fp = open(sys.argv[1],'r')
-line = fp.readline()
-js = json.loads(line)
+body = fp.read()
+js = json.loads(body)
 fpr = open(sys.argv[2],'r')
 
 predictions = {}
